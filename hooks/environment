@@ -5,3 +5,7 @@ set -ueo pipefail
 HOOKS_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd)"
 
 export PATH="$PATH:$HOOKS_DIR/../bin"
+
+apt-get update \
+  && apt-get install jq \
+  && apt-get install silversearcher-ag
