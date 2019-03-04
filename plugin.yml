@@ -1,0 +1,9 @@
+name: Check Colours
+description: An example BuildKite plugin for adding your own library of commands to expose to build jobs
+author: https://github.com/99designs
+original_author: https://github.com/buildkite
+requirements:
+  - docker
+configuration:
+  properties: {}
+  additionalProperties: false

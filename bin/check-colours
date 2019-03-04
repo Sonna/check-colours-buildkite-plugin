@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# Searches .scss files for hard coded hex values
+# and suggests an alternative from our colour palette
+
+set -euo pipefail
+# Our color styleguide
+
+colors_ff7e65="heritage"
+colors_f6caa2="sandyButt"
+colors_ce283D="risingSun"
+colors_f0a9b7="littlePiggy"
+colors_752873="berlinThing"
+colors_b36ea7="lavendork"
+colors_1f3ca6="pacific"
+colors_81a3e6="carnaval"
+colors_2f9780="forrestLyf"
+colors_a4d2d4="mildredsCar"
+colors_95837b="looseAlmond"
+colors_cbbba5="theTanTan"
+colors_f3f2f0="karlTheFog"
+colors_e6e6e6="t1000"
+colors_555="puntRoad"
+colors_555555="puntRoad"
+colors_999="fiftyFirstShade"
+colors_999999="fiftyFirstShade"
+colors_ccc="pebbleBeach"
+colors_cccccc="pebbleBeach"
+colors_fff="bleachedAs"
+colors_ffffff="bleachedAs"
+
+suggestColor() {
+    while read line; do
+        filename=$(echo $line | cut -f1 -d:)
+        filenumber=$(echo $line | cut -f2 -d:)
+        hex=$(echo $line | cut -f3 -d:)
+
+        hexNoHash=`echo "$hex" | sed 's/#//'`
+        echo "Found $hex at $filename:$filenumber"
+
+        for k in ${!colors_*}; do
+            key=`echo "$k" | sed 's/colors_//'`
+            if [ $key == $hexNoHash ]; then
+                n=$k
+                echo "Did you mean ${!n} for $hex, at $filename:$filenumber?"
+            fi
+        done
+    done
+}
+
+# Hex regex
+hexex='#([0-9a-fA-F]{6}|[A-Fa-f0-9]{3})'
+
+# Search css files and suggest named colours for hex values
+ag -l --sass --ignore "packages/common/core" | xargs egrep -H -n -i -o $hexex | suggestColor
+
+current=9
+count=`ag -l --sass --ignore "packages/common/core" | xargs egrep -h -i -o $hexex | wc -l | bc`
+echo "Number of hex values found = $count"
+
+if [ "$count" -gt "$current" ]; then
+    echo "You have committed a new hex value"
+    echo "Try running bin/rename-hex-colours or refer to the styleguide"
+    exit 1
+fi
