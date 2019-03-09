@@ -1,0 +1,14 @@
+#!/bin/bash
+
+set -euo pipefail
+
+DOCKER_IMAGE_TAG="ag-alpine"
+PLUGIN_DIR="$(cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd)"
+
+echo "--- Running 'bin/check-colours' in built 'Dockerfile'"
+
+docker build -t "${DOCKER_IMAGE_TAG}" "${PLUGIN_DIR}"
+docker run -it --rm \
+  --volume "${PWD}:/app" \
+  --workdir "/app" \
+  "${DOCKER_IMAGE_TAG}"
