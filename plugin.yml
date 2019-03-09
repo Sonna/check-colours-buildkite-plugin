@@ -3,7 +3,7 @@ description: An example BuildKite plugin for adding your own library of commands
 author: https://github.com/99designs
 original_author: https://github.com/buildkite
 requirements:
-  - bash
+  - docker
 configuration:
   properties: {}
   additionalProperties: false
